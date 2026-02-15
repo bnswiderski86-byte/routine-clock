@@ -391,6 +391,7 @@
 
     function addActivityRow(tbodyId) {
       const tbody = document.getElementById(tbodyId);
+      if (!tbody) return;
       const currentRows = tbody.querySelectorAll("tr").length;
       if (currentRows >= 15) return;
 
@@ -406,79 +407,41 @@
 
     function removeLastRow(tbodyId) {
       const tbody = document.getElementById(tbodyId);
+      if (!tbody) return;
       const rows = tbody.querySelectorAll("tr");
-      if (rows.length <= 1) return; // keep at least one row
+      if (rows.length <= 1) return;
       tbody.removeChild(rows[rows.length - 1]);
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const map = [
-        ["add-weekday-day-row", "remove-weekday-day-row", "weekday-day-rows"],
-        ["add-weekday-night-row", "remove-weekday-night-row", "weekday-night-rows"],
-        ["add-weekend-day-row", "remove-weekend-day-row", "weekend-day-rows"],
-        ["add-weekend-night-row", "remove-weekend-night-row", "weekend-night-rows"]
-      ];
-
-      map.forEach(([addId, removeId, tbodyId]) => {
-        const addBtn = document.getElementById(addId);
-        const removeBtn = document.getElementById(removeId);
-        if (addBtn) addBtn.addEventListener("click", () => addActivityRow(tbodyId));
-        if (removeBtn) removeBtn.addEventListener("click", () => removeLastRow(tbodyId));
-      });
-    });
-
-    // Load existing schedule if present (prefill tables)
-    (function loadExisting() {
-      try {
-        const raw = localStorage.getItem("routineClockSchedule");
-        if (!raw) return;
-        const data = JSON.parse(raw);
-
-        if (data && data.palette && document.querySelector(`input[name="palette"][value="${data.palette}"]`)) {
-          document.querySelector(`input[name="palette"][value="${data.palette}"]`).checked = true;
-        }
-
-        function ensureRows(count, tbodySelector) {
-          const tbody = document.querySelector(tbodySelector);
-          if (!tbody) return;
-          while (tbody.querySelectorAll("tr").length < count && tbody.querySelectorAll("tr").length < 15) {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <td><input type="text" value="" /></td>
-              <td><input type="time" value="" /></td>
-              <td><input type="time" value="" /></td>
-              <td><input type="text" value="" /></td>
-            `;
-            tbody.appendChild(tr);
-          }
-        }
-
-        function fillTable(tasks, tbodySelector) {
-          if (!tasks) return;
-          ensureRows(tasks.length, tbodySelector);
-          const rows = document.querySelectorAll(`${tbodySelector} tr`);
-          tasks.forEach((task, i) => {
-            if (!rows[i]) return;
-            const inputs = rows[i].querySelectorAll("input");
-            inputs[0].value = task.label || "";
-            inputs[1].value = task.start || "";
-            inputs[2].value = task.end || "";
-            inputs[3].value = task.icon || "";
-          });
-        }
-
-        if (data.mon_fri) {
-          fillTable(data.mon_fri.day, "#weekday-day-rows");
-          fillTable(data.mon_fri.night, "#weekday-night-rows");
-        }
-        if (data.weekend) {
-          fillTable(data.weekend.day, "#weekend-day-rows");
-          fillTable(data.weekend.night, "#weekend-night-rows");
-        }
-      } catch (e) {
-        console.error("Error loading existing schedule", e);
+    function ensureRows(count, tbodySelector) {
+      const tbody = document.querySelector(tbodySelector);
+      if (!tbody) return;
+      while (tbody.querySelectorAll("tr").length < count &&
+             tbody.querySelectorAll("tr").length < 15) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><input type="text" value="" /></td>
+          <td><input type="time" value="" /></td>
+          <td><input type="time" value="" /></td>
+          <td><input type="text" value="" /></td>
+        `;
+        tbody.appendChild(tr);
       }
-    })();
+    }
+
+    function fillTable(tasks, tbodySelector) {
+      if (!tasks) return;
+      ensureRows(tasks.length, tbodySelector);
+      const rows = document.querySelectorAll(`${tbodySelector} tr`);
+      tasks.forEach((task, i) => {
+        if (!rows[i]) return;
+        const inputs = rows[i].querySelectorAll("input");
+        inputs[0].value = task.label || "";
+        inputs[1].value = task.start || "";
+        inputs[2].value = task.end || "";
+        inputs[3].value = task.icon || "";
+      });
+    }
 
     function collectTasks(tableId, colors) {
       const rows = document.querySelectorAll(`#${tableId} tr`);
@@ -503,61 +466,110 @@
       return tasks;
     }
 
-    document.getElementById("save-and-open").addEventListener("click", () => {
-      const status = document.getElementById("status");
-      status.textContent = "";
+    document.addEventListener("DOMContentLoaded", () => {
+      const map = [
+        ["add-weekday-day-row", "remove-weekday-day-row", "weekday-day-rows"],
+        ["add-weekday-night-row", "remove-weekday-night-row", "weekday-night-rows"],
+        ["add-weekend-day-row", "remove-weekend-day-row", "weekend-day-rows"],
+        ["add-weekend-night-row", "remove-weekend-night-row", "weekend-night-rows"]
+      ];
 
-      const paletteInput = document.querySelector('input[name="palette"]:checked');
-      const paletteKey = paletteInput ? paletteInput.value : "soft";
-      const colors = PALETTES[paletteKey];
-
-      const weekdayDay = collectTasks("weekday-day-rows", colors);
-      const weekdayNight = collectTasks("weekday-night-rows", colors);
-      const weekendDay = collectTasks("weekend-day-rows", colors);
-      const weekendNight = collectTasks("weekend-night-rows", colors);
-
-      if (
-        weekdayDay.length === 0 &&
-        weekdayNight.length === 0 &&
-        weekendDay.length === 0 &&
-        weekendNight.length === 0
-      ) {
-        status.textContent = "Please add at least one activity before saving.";
-        return;
-      }
-
-      const scheduleData = {
-        palette: paletteKey,
-        mon_fri: {
-          day: weekdayDay,
-          night: weekdayNight
-        },
-        weekend: {
-          day: weekendDay,
-          night: weekendNight
-        }
-      };
+      map.forEach(([addId, removeId, tbodyId]) => {
+        const addBtn = document.getElementById(addId);
+        const removeBtn = document.getElementById(removeId);
+        if (addBtn) addBtn.addEventListener("click", () => addActivityRow(tbodyId));
+        if (removeBtn) removeBtn.addEventListener("click", () => removeLastRow(tbodyId));
+      });
 
       try {
-        localStorage.setItem("routineClockSchedule", JSON.stringify(scheduleData));
-        status.textContent = "Schedule saved on this device. Opening clock…";
-        // redirect to your hosted clock page
-        window.location.href = "https://bnswiderski86-byte.github.io/routine-clock/clock.html";
-      } catch (e) {
-        console.error("Error saving schedule", e);
-        status.textContent = "There was a problem saving. Make sure this browser allows local storage.";
-      }
-    });
+        const raw = localStorage.getItem("routineClockSchedule");
+        if (raw) {
+          const data = JSON.parse(raw);
 
-    document.getElementById("clear-schedule").addEventListener("click", () => {
-      localStorage.removeItem("routineClockSchedule");
-      document.getElementById("status").textContent = "Saved schedule cleared on this device.";
+          if (data && data.palette &&
+              document.querySelector(`input[name="palette"][value="${data.palette}"]`)) {
+            document
+              .querySelector(`input[name="palette"][value="${data.palette}"]`)
+              .checked = true;
+          }
+
+          if (data.mon_fri) {
+            fillTable(data.mon_fri.day, "#weekday-day-rows");
+            fillTable(data.mon_fri.night, "#weekday-night-rows");
+          }
+          if (data.weekend) {
+            fillTable(data.weekend.day, "#weekend-day-rows");
+            fillTable(data.weekend.night, "#weekend-night-rows");
+          }
+        }
+      } catch (e) {
+        console.error("Error loading existing schedule", e);
+      }
+
+      const saveBtn = document.getElementById("save-and-open");
+      if (saveBtn) {
+        saveBtn.addEventListener("click", () => {
+          const status = document.getElementById("status");
+          if (status) status.textContent = "";
+
+          const paletteInput = document.querySelector('input[name="palette"]:checked');
+          const paletteKey = paletteInput ? paletteInput.value : "soft";
+          const colors = PALETTES[paletteKey];
+
+          const weekdayDay = collectTasks("weekday-day-rows", colors);
+          const weekdayNight = collectTasks("weekday-night-rows", colors);
+          const weekendDay = collectTasks("weekend-day-rows", colors);
+          const weekendNight = collectTasks("weekend-night-rows", colors);
+
+          if (
+            weekdayDay.length === 0 &&
+            weekdayNight.length === 0 &&
+            weekendDay.length === 0 &&
+            weekendNight.length === 0
+          ) {
+            if (status) status.textContent = "Please add at least one activity before saving.";
+            return;
+          }
+
+          const scheduleData = {
+            palette: paletteKey,
+            mon_fri: {
+              day: weekdayDay,
+              night: weekdayNight
+            },
+            weekend: {
+              day: weekendDay,
+              night: weekendNight
+            }
+          };
+
+          try {
+            localStorage.setItem("routineClockSchedule", JSON.stringify(scheduleData));
+            if (status) status.textContent = "Schedule saved on this device. Opening clock…";
+            window.location.href =
+              "https://bnswiderski86-byte.github.io/routine-clock/clock.html";
+          } catch (e) {
+            console.error("Error saving schedule", e);
+            if (status) {
+              status.textContent =
+                "There was a problem saving. Make sure this browser allows local storage.";
+            }
+          }
+        });
+      }
+
+      const clearBtn = document.getElementById("clear-schedule");
+      if (clearBtn) {
+        clearBtn.addEventListener("click", () => {
+          localStorage.removeItem("routineClockSchedule");
+          const status = document.getElementById("status");
+          if (status) status.textContent = "Saved schedule cleared on this device.";
+        });
+      }
     });
   </script>
 </body>
 </html>
-
-
 
 
 
