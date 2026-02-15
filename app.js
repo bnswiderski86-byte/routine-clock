@@ -1,4 +1,5 @@
-const scheduleData = {
+// Default schedule (used if no parent schedule is saved on this device)
+const DEFAULT_SCHEDULE = {
   mon_fri: {
     day: [
       { label: "Wake Up",     start: "07:00", end: "07:30", color: "#A8BED4", icon: "⏰" },
@@ -38,6 +39,22 @@ const scheduleData = {
     ]
   }
 };
+
+// Try to load a saved schedule from this device.
+// If none is saved or something goes wrong, fall back to DEFAULT_SCHEDULE.
+let scheduleData;
+try {
+  const raw = localStorage.getItem("routineClockSchedule");
+  if (raw) {
+    scheduleData = JSON.parse(raw);
+  } else {
+    scheduleData = DEFAULT_SCHEDULE;
+  }
+} catch (e) {
+  console.error("Error reading saved schedule, using default", e);
+  scheduleData = DEFAULT_SCHEDULE;
+}
+
 
 const sectorsGroup = document.getElementById("sectors");
 const activityLabel = document.getElementById("current-activity");
@@ -300,4 +317,5 @@ function updateClock() {
 
 setInterval(updateClock, 1000);
 updateClock();
+
 
