@@ -90,6 +90,9 @@
       color: #6b7280;
       margin-top: 0.25rem;
     }
+    .add-row-btn {
+      margin-top: 0.5rem;
+    }
   </style>
 </head>
 <body>
@@ -186,6 +189,9 @@
         </tr>
       </tbody>
     </table>
+    <button type="button" class="secondary add-row-btn" id="add-weekday-day-row">
+      + Add weekday daytime activity
+    </button>
     <p class="small-note">Leave extra rows blank if you don’t need them.</p>
   </div>
 
@@ -229,6 +235,9 @@
         </tr>
       </tbody>
     </table>
+    <button type="button" class="secondary add-row-btn" id="add-weekday-night-row">
+      + Add weekday night activity
+    </button>
   </div>
 
   <!-- Weekend day -->
@@ -283,6 +292,9 @@
         </tr>
       </tbody>
     </table>
+    <button type="button" class="secondary add-row-btn" id="add-weekend-day-row">
+      + Add weekend daytime activity
+    </button>
   </div>
 
   <!-- Weekend night -->
@@ -325,6 +337,9 @@
         </tr>
       </tbody>
     </table>
+    <button type="button" class="secondary add-row-btn" id="add-weekend-night-row">
+      + Add weekend night activity
+    </button>
   </div>
 
   <!-- Save section -->
@@ -347,6 +362,38 @@
       calm: ["#a5b4fc", "#7dd3fc", "#6ee7b7", "#fde68a", "#f9a8d4", "#c4b5fd"]
     };
 
+    // helper to add a blank activity row (up to 15)
+    function addActivityRow(tbodyId) {
+      const tbody = document.getElementById(tbodyId);
+      const currentRows = tbody.querySelectorAll("tr").length;
+      if (currentRows >= 15) return;
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><input type="text" value="" /></td>
+        <td><input type="time" value="" /></td>
+        <td><input type="time" value="" /></td>
+        <td><input type="text" value="" /></td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    // hook up add-row buttons after DOM is ready
+    document.addEventListener("DOMContentLoaded", () => {
+      const map = [
+        ["add-weekday-day-row", "weekday-day-rows"],
+        ["add-weekday-night-row", "weekday-night-rows"],
+        ["add-weekend-day-row", "weekend-day-rows"],
+        ["add-weekend-night-row", "weekend-night-rows"]
+      ];
+      map.forEach(([btnId, tbodyId]) => {
+        const btn = document.getElementById(btnId);
+        if (btn) {
+          btn.addEventListener("click", () => addActivityRow(tbodyId));
+        }
+      });
+    });
+
     // Load existing schedule if present (prefill tables)
     (function loadExisting() {
       try {
@@ -358,9 +405,25 @@
           document.querySelector(`input[name="palette"][value="${data.palette}"]`).checked = true;
         }
 
-        function fillTable(tasks, tableSelector) {
+        function ensureRows(count, tbodySelector) {
+          const tbody = document.querySelector(tbodySelector);
+          if (!tbody) return;
+          while (tbody.querySelectorAll("tr").length < count && tbody.querySelectorAll("tr").length < 15) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td><input type="text" value="" /></td>
+              <td><input type="time" value="" /></td>
+              <td><input type="time" value="" /></td>
+              <td><input type="text" value="" /></td>
+            `;
+            tbody.appendChild(tr);
+          }
+        }
+
+        function fillTable(tasks, tbodySelector) {
           if (!tasks) return;
-          const rows = document.querySelectorAll(`${tableSelector} tr`);
+          ensureRows(tasks.length, tbodySelector);
+          const rows = document.querySelectorAll(`${tbodySelector} tr`);
           tasks.forEach((task, i) => {
             if (!rows[i]) return;
             const inputs = rows[i].querySelectorAll("input");
@@ -459,6 +522,7 @@
   </script>
 </body>
 </html>
+
 
 
 
