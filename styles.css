@@ -1,0 +1,171 @@
+/* 1. Reset everything to remove default browser white space */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 2. Lock the body to the screen size (No scrolling allowed!) */
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; /* This kills the scrollbars */
+  background-color: #f0f8ff; /* Day color default */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: sans-serif;
+  transition: background-color 0.5s ease;
+}
+
+/* 3. The Clock Container */
+/* vmin = "Viewport Minimum". It looks at height vs width and picks the smaller one. */
+/* We use 98vmin so it fills 98% of the screen, leaving a tiny safety edge. */
+.clock-container {
+  width: 98vmin;
+  height: 98vmin;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+/* 4. Make the SVG fill that container perfectly */
+svg {
+  width: 100%;
+  height: 100%;
+  display: block; /* Removes tiny hidden gaps for text alignment */
+}
+
+/* Day / Night Colors */
+body.day-mode {
+  background: linear-gradient(135deg, #e8f4f8 0%, #d4e8f0 100%);
+}
+
+body.night-mode {
+  background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+}
+
+/* Font styling (numbers not used now but kept) */
+.clock-number {
+  font-size: 16px; /* Slightly larger for small screens */
+  font-weight: bold;
+  fill: #333;
+  font-family: 'Arial', sans-serif;
+}
+
+body.night-mode .clock-number {
+  fill: #fff;
+}
+
+/* Night Mode for the Arrow Hand */
+body.night-mode #hour-hand line {
+  stroke: white;
+}
+
+body.night-mode #hour-hand polygon {
+  fill: white;
+}
+
+/* ===== ENHANCED FEATURES ===== */
+
+/* Current activity highlighting */
+.current-activity {
+  opacity: 0.9 !important;
+  filter: brightness(1.15);
+}
+
+/* Pulsing animation for current activity emoji - STRONGER VERSION */
+.current-icon {
+  animation: iconPulse 1.5s ease-in-out infinite !important;
+  transform-origin: center center;
+}
+
+@keyframes iconPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Transition warning pulse effect */
+body.transition-warning .clock-container {
+  animation: pulse 0.5s ease-in-out 3;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+/* Activity labels styling */
+#current-activity {
+  position: absolute;
+  bottom: 5vh;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  width: 90%;
+}
+
+.now-label {
+  font-size: 4vmin;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 1vh;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.next-label {
+  font-size: 3vmin;
+  color: #5a6c7d;
+  font-weight: 500;
+}
+
+body.night-mode .now-label {
+  color: #e8f4f8;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.night-mode .next-label {
+  color: #b8c5d6;
+}
+
+/* Smooth transitions for all elements */
+svg path,
+svg text {
+  transition: all 0.3s ease;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .now-label {
+    font-size: 5vmin;
+  }
+
+  .next-label {
+    font-size: 3.5vmin;
+  }
+}
+
+@media (max-width: 480px) {
+  .now-label {
+    font-size: 6vmin;
+  }
+
+  .next-label {
+    font-size: 4vmin;
+  }
+}
+
