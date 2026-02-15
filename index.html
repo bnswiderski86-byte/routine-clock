@@ -1,31 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thomas's Visual Clock</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Routine Clock – Parent Setup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 1.5rem;
+      background: #f5f7fb;
+      color: #222;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 1.8rem;
+    }
+    .section {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    label {
+      font-weight: 600;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+    th, td {
+      border-bottom: 1px solid #e1e4f0;
+      padding: 0.4rem;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    input[type="text"], input[type="time"] {
+      width: 100%;
+      padding: 0.25rem 0.4rem;
+      font-size: 0.9rem;
+    }
+    select {
+      width: 100%;
+      padding: 0.25rem 0.4rem;
+      font-size: 0.9rem;
+    }
+    .buttons {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+    .primary {
+      background: #4f46e5;
+      color: #fff;
+    }
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+    .palette-swatches {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .swatch {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+    }
+    .swatch-colors {
+      display: inline-flex;
+      overflow: hidden;
+      border-radius: 999px;
+      border: 1px solid #cbd5f5;
+    }
+    .swatch-colors span {
+      width: 14px;
+      height: 14px;
+    }
+    .small-note {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 0.25rem;
+    }
+  </style>
 </head>
 <body>
-    <div class="clock-container">
-        <svg id="clock-svg" viewBox="0 0 200 200">
-    <g id="sectors"></g>
-    
-    <circle cx="100" cy="100" r="98" fill="none" stroke="#333" stroke-width="4"/>
+  <h1>Routine Clock – Parent Setup</h1>
+  <p>Use this page to create your child’s schedule. When you click “Save & View Clock”, this device will remember your schedule and show it on the clock page.</p>
 
-   <g id="hour-hand">
-    <line x1="100" y1="100" x2="100" y2="65" stroke="black" stroke-width="4" stroke-linecap="round" />
-    
-    <polygon points="100,45 93,65 107,65" fill="black" />
-</g>
-    <line id="minute-hand" x1="100" y1="100" x2="100" y2="30" stroke="#555" stroke-width="4" stroke-linecap="round" />
-    <line id="second-hand" x1="100" y1="100" x2="100" y2="20" stroke="red" stroke-width="2" stroke-linecap="round" />
-    <circle cx="100" cy="100" r="4" fill="#333" />
-</svg>
-
-        <div id="current-activity">Loading...</div>
+  <div class="section">
+    <h2>1. Choose color palette</h2>
+    <p class="small-note">Pick the colors for the wedges on the clock.</p>
+    <div class="palette-swatches">
+      <label class="swatch">
+        <input type="radio" name="palette" value="soft" checked />
+        <span>Soft</span>
+        <span class="swatch-colors">
+          <span style="background:#fde68a"></span>
+          <span style="background:#bfdbfe"></span>
+          <span style="background:#bbf7d0"></span>
+          <span style="background:#fecaca"></span>
+        </span>
+      </label>
+      <label class="swatch">
+        <input type="radio" name="palette" value="bold" />
+        <span>Bold</span>
+        <span class="swatch-colors">
+          <span style="background:#f97316"></span>
+          <span style="background:#22c55e"></span>
+          <span style="background:#3b82f6"></span>
+          <span style="background:#e11d48"></span>
+        </span>
+      </label>
+      <label class="swatch">
+        <input type="radio" name="palette" value="calm" />
+        <span>Calm</span>
+        <span class="swatch-colors">
+          <span style="background:#a5b4fc"></span>
+          <span style="background:#7dd3fc"></span>
+          <span style="background:#6ee7b7"></span>
+          <span style="background:#fde68a"></span>
+        </span>
+      </label>
     </div>
+  </div>
 
-    <script src="app.js"></script>
+  <div class="section">
+    <h2>2. Day schedule (all days for now)</h2>
+    <p class="small-note">Later we can add separate weekday/weekend and night schedules. For now, fill in the main parts of the day.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Activity</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Icon (emoji)</th>
+        </tr>
+      </thead>
+      <tbody id="activity-rows">
+        <!-- 8 starter rows -->
+        <tr>
+          <td><input type="text" value="Wake up" /></td>
+          <td><input type="time" value="07:00" /></td>
+          <td><input type="time" value="07:30" /></td>
+          <td><input type="text" value="☀️" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Breakfast" /></td>
+          <td><input type="time" value="07:30" /></td>
+          <td><input type="time" value="08:00" /></td>
+          <td><input type="text" value="🥞" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="School / Care" /></td>
+          <td><input type="time" value="08:00" /></td>
+          <td><input type="time" value="15:00" /></td>
+          <td><input type="text" value="🏫" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Snack" /></td>
+          <td><input type="time" value="15:00" /></td>
+          <td><input type="time" value="15:30" /></td>
+          <td><input type="text" value="🍎" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Play time" /></td>
+          <td><input type="time" value="15:30" /></td>
+          <td><input type="time" value="17:00" /></td>
+          <td><input type="text" value="🧸" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Dinner" /></td>
+          <td><input type="time" value="17:00" /></td>
+          <td><input type="time" value="18:00" /></td>
+          <td><input type="text" value="🍽️" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Screen / Chill" /></td>
+          <td><input type="time" value="18:00" /></td>
+          <td><input type="time" value="19:00" /></td>
+          <td><input type="text" value="📺" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Bedtime routine" /></td>
+          <td><input type="time" value="19:00" /></td>
+          <td><input type="time" value="20:00" /></td>
+          <td><input type="text" value="🌙" /></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="small-note">You can leave extra rows blank if you don’t need them.</p>
+  </div>
+
+  <div class="section">
+    <h2>3. Save and open the clock</h2>
+    <p class="small-note">
+      This saves only on this device in this browser. To use on another device, open this page there and set the schedule again.
+    </p>
+    <div class="buttons">
+      <button class="primary" id="save-and-open">Save &amp; View Clock</button>
+      <button class="secondary" id="clear-schedule" type="button">Clear saved schedule on this device</button>
+    </div>
+    <p id="status" class="small-note"></p>
+  </div>
+
+  <script>
+    const PALETTES = {
+      soft: ["#fde68a", "#bfdbfe", "#bbf7d0", "#fecaca", "#e9d5ff", "#fee2e2"],
+      bold: ["#f97316", "#22c55e", "#3b82f6", "#e11d48", "#a855f7", "#0ea5e9"],
+      calm: ["#a5b4fc", "#7dd3fc", "#6ee7b7", "#fde68a", "#f9a8d4", "#c4b5fd"]
+    };
+
+    // Load existing schedule if present
+    (function loadExisting() {
+      try {
+        const raw = localStorage.getItem("routineClockSchedule");
+        if (!raw) return;
+        const data = JSON.parse(raw);
+
+        if (data && data.palette && document.querySelector(`input[name="palette"][value="${data.palette}"]`)) {
+          document.querySelector(`input[name="palette"][value="${data.palette}"]`).checked = true;
+        }
+
+        if (data && data.mon_fri && data.mon_fri.day) {
+          const tasks = data.mon_fri.day;
+          const rows = document.querySelectorAll("#activity-rows tr");
+          tasks.forEach((task, i) => {
+            if (!rows[i]) return;
+            const inputs = rows[i].querySelectorAll("input");
+            inputs[0].value = task.label || "";
+            inputs[1].value = task.start || "";
+            inputs[2].value = task.end || "";
+            inputs[3].value = task.icon || "";
+          });
+        }
+      } catch (e) {
+        console.error("Error loading existing schedule", e);
+      }
+    })();
+
+    document.getElementById("save-and-open").addEventListener("click", () => {
+      const status = document.getElementById("status");
+      status.textContent = "";
+
+      const paletteInput = document.querySelector('input[name="palette"]:checked');
+      const paletteKey = paletteInput ? paletteInput.value : "soft";
+      const colors = PALETTES[paletteKey];
+
+      const rows = document.querySelectorAll("#activity-rows tr");
+      const tasks = [];
+      let colorIndex = 0;
+
+      rows.forEach(row => {
+        const inputs = row.querySelectorAll("input");
+        const label = inputs[0].value.trim();
+        const start = inputs[1].value;
+        const end = inputs[2].value;
+        const icon = inputs[3].value.trim();
+
+        if (!label || !start || !end) return;
+
+        const color = colors[colorIndex % colors.length];
+        colorIndex++;
+
+        tasks.push({ label, start, end, color, icon: icon || "⬤" });
+      });
+
+      if (tasks.length === 0) {
+        status.textContent = "Please add at least one activity before saving.";
+        return;
+      }
+
+      const scheduleData = {
+        palette: paletteKey,
+        mon_fri: {
+          day: tasks,
+          night: []
+        },
+        weekend: {
+          day: tasks,
+          night: []
+        }
+      };
+
+      try {
+        localStorage.setItem("routineClockSchedule", JSON.stringify(scheduleData));
+        status.textContent = "Schedule saved on this device. Opening clock…";
+        window.location.href = "clock.html";
+      } catch (e) {
+        console.error("Error saving schedule", e);
+        status.textContent = "There was a problem saving. Make sure this browser allows local storage.";
+      }
+    });
+
+    document.getElementById("clear-schedule").addEventListener("click", () => {
+      localStorage.removeItem("routineClockSchedule");
+      document.getElementById("status").textContent = "Saved schedule cleared on this device.";
+    });
+  </script>
 </body>
 </html>
+
