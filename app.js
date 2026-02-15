@@ -315,5 +315,15 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
+// Edit schedule button: go back to setup page
+const editBtn = document.getElementById("edit-schedule");
+if (editBtn) {
+  editBtn.addEventListener("click", () => {
+    window.location.href =
+      "https://bnswiderski86-byte.github.io/routine-clock/parent-setup.html";
+    // ^ replace with your actual setup URL/file name
+  });
+}
+
 
 
