@@ -63,6 +63,10 @@
       background: #e5e7eb;
       color: #111827;
     }
+    .danger {
+      background: #ef4444;
+      color: #fff;
+    }
     .palette-swatches {
       display: flex;
       gap: 0.75rem;
@@ -90,8 +94,11 @@
       color: #6b7280;
       margin-top: 0.25rem;
     }
-    .add-row-btn {
+    .row-buttons {
+      display: flex;
+      gap: 0.5rem;
       margin-top: 0.5rem;
+      flex-wrap: wrap;
     }
   </style>
 </head>
@@ -189,9 +196,14 @@
         </tr>
       </tbody>
     </table>
-    <button type="button" class="secondary add-row-btn" id="add-weekday-day-row">
-      + Add weekday daytime activity
-    </button>
+    <div class="row-buttons">
+      <button type="button" class="secondary" id="add-weekday-day-row">
+        + Add weekday daytime activity
+      </button>
+      <button type="button" class="danger" id="remove-weekday-day-row">
+        − Remove last
+      </button>
+    </div>
     <p class="small-note">Leave extra rows blank if you don’t need them.</p>
   </div>
 
@@ -235,9 +247,14 @@
         </tr>
       </tbody>
     </table>
-    <button type="button" class="secondary add-row-btn" id="add-weekday-night-row">
-      + Add weekday night activity
-    </button>
+    <div class="row-buttons">
+      <button type="button" class="secondary" id="add-weekday-night-row">
+        + Add weekday night activity
+      </button>
+      <button type="button" class="danger" id="remove-weekday-night-row">
+        − Remove last
+      </button>
+    </div>
   </div>
 
   <!-- Weekend day -->
@@ -292,9 +309,14 @@
         </tr>
       </tbody>
     </table>
-    <button type="button" class="secondary add-row-btn" id="add-weekend-day-row">
-      + Add weekend daytime activity
-    </button>
+    <div class="row-buttons">
+      <button type="button" class="secondary" id="add-weekend-day-row">
+        + Add weekend daytime activity
+      </button>
+      <button type="button" class="danger" id="remove-weekend-day-row">
+        − Remove last
+      </button>
+    </div>
   </div>
 
   <!-- Weekend night -->
@@ -337,9 +359,14 @@
         </tr>
       </tbody>
     </table>
-    <button type="button" class="secondary add-row-btn" id="add-weekend-night-row">
-      + Add weekend night activity
-    </button>
+    <div class="row-buttons">
+      <button type="button" class="secondary" id="add-weekend-night-row">
+        + Add weekend night activity
+      </button>
+      <button type="button" class="danger" id="remove-weekend-night-row">
+        − Remove last
+      </button>
+    </div>
   </div>
 
   <!-- Save section -->
@@ -377,8 +404,159 @@
       tbody.appendChild(tr);
     }
 
+    function removeLastRow(tbodyId) {
+      const tbody = document.getElementById(tbodyId);
+      const rows = tbody.querySelectorAll("tr");
+      if (rows.length <= 1) return; // keep at least one row
+      tbody.removeChild(rows[rows.length - 1]);
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
-      c
+      const map = [
+        ["add-weekday-day-row", "remove-weekday-day-row", "weekday-day-rows"],
+        ["add-weekday-night-row", "remove-weekday-night-row", "weekday-night-rows"],
+        ["add-weekend-day-row", "remove-weekend-day-row", "weekend-day-rows"],
+        ["add-weekend-night-row", "remove-weekend-night-row", "weekend-night-rows"]
+      ];
+
+      map.forEach(([addId, removeId, tbodyId]) => {
+        const addBtn = document.getElementById(addId);
+        const removeBtn = document.getElementById(removeId);
+        if (addBtn) addBtn.addEventListener("click", () => addActivityRow(tbodyId));
+        if (removeBtn) removeBtn.addEventListener("click", () => removeLastRow(tbodyId));
+      });
+    });
+
+    // Load existing schedule if present (prefill tables)
+    (function loadExisting() {
+      try {
+        const raw = localStorage.getItem("routineClockSchedule");
+        if (!raw) return;
+        const data = JSON.parse(raw);
+
+        if (data && data.palette && document.querySelector(`input[name="palette"][value="${data.palette}"]`)) {
+          document.querySelector(`input[name="palette"][value="${data.palette}"]`).checked = true;
+        }
+
+        function ensureRows(count, tbodySelector) {
+          const tbody = document.querySelector(tbodySelector);
+          if (!tbody) return;
+          while (tbody.querySelectorAll("tr").length < count && tbody.querySelectorAll("tr").length < 15) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td><input type="text" value="" /></td>
+              <td><input type="time" value="" /></td>
+              <td><input type="time" value="" /></td>
+              <td><input type="text" value="" /></td>
+            `;
+            tbody.appendChild(tr);
+          }
+        }
+
+        function fillTable(tasks, tbodySelector) {
+          if (!tasks) return;
+          ensureRows(tasks.length, tbodySelector);
+          const rows = document.querySelectorAll(`${tbodySelector} tr`);
+          tasks.forEach((task, i) => {
+            if (!rows[i]) return;
+            const inputs = rows[i].querySelectorAll("input");
+            inputs[0].value = task.label || "";
+            inputs[1].value = task.start || "";
+            inputs[2].value = task.end || "";
+            inputs[3].value = task.icon || "";
+          });
+        }
+
+        if (data.mon_fri) {
+          fillTable(data.mon_fri.day, "#weekday-day-rows");
+          fillTable(data.mon_fri.night, "#weekday-night-rows");
+        }
+        if (data.weekend) {
+          fillTable(data.weekend.day, "#weekend-day-rows");
+          fillTable(data.weekend.night, "#weekend-night-rows");
+        }
+      } catch (e) {
+        console.error("Error loading existing schedule", e);
+      }
+    })();
+
+    function collectTasks(tableId, colors) {
+      const rows = document.querySelectorAll(`#${tableId} tr`);
+      const tasks = [];
+      let colorIndex = 0;
+
+      rows.forEach(row => {
+        const inputs = row.querySelectorAll("input");
+        const label = inputs[0].value.trim();
+        const start = inputs[1].value;
+        const end = inputs[2].value;
+        const icon = inputs[3].value.trim();
+
+        if (!label || !start || !end) return;
+
+        const color = colors[colorIndex % colors.length];
+        colorIndex++;
+
+        tasks.push({ label, start, end, color, icon: icon || "⬤" });
+      });
+
+      return tasks;
+    }
+
+    document.getElementById("save-and-open").addEventListener("click", () => {
+      const status = document.getElementById("status");
+      status.textContent = "";
+
+      const paletteInput = document.querySelector('input[name="palette"]:checked');
+      const paletteKey = paletteInput ? paletteInput.value : "soft";
+      const colors = PALETTES[paletteKey];
+
+      const weekdayDay = collectTasks("weekday-day-rows", colors);
+      const weekdayNight = collectTasks("weekday-night-rows", colors);
+      const weekendDay = collectTasks("weekend-day-rows", colors);
+      const weekendNight = collectTasks("weekend-night-rows", colors);
+
+      if (
+        weekdayDay.length === 0 &&
+        weekdayNight.length === 0 &&
+        weekendDay.length === 0 &&
+        weekendNight.length === 0
+      ) {
+        status.textContent = "Please add at least one activity before saving.";
+        return;
+      }
+
+      const scheduleData = {
+        palette: paletteKey,
+        mon_fri: {
+          day: weekdayDay,
+          night: weekdayNight
+        },
+        weekend: {
+          day: weekendDay,
+          night: weekendNight
+        }
+      };
+
+      try {
+        localStorage.setItem("routineClockSchedule", JSON.stringify(scheduleData));
+        status.textContent = "Schedule saved on this device. Opening clock…";
+        // redirect to your hosted clock page
+        window.location.href = "https://bnswiderski86-byte.github.io/routine-clock/clock.html";
+      } catch (e) {
+        console.error("Error saving schedule", e);
+        status.textContent = "There was a problem saving. Make sure this browser allows local storage.";
+      }
+    });
+
+    document.getElementById("clear-schedule").addEventListener("click", () => {
+      localStorage.removeItem("routineClockSchedule");
+      document.getElementById("status").textContent = "Saved schedule cleared on this device.";
+    });
+  </script>
+</body>
+</html>
+
 
 
 
