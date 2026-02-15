@@ -320,9 +320,11 @@ const editBtn = document.getElementById("edit-schedule");
 if (editBtn) {
   editBtn.addEventListener("click", () => {
     window.location.href =
-      "https://bnswiderski86-byte.github.io/routine-clock/"; // your setup page URL
+      "https://bnswiderski86-byte.github.io/routine-clock/";
   });
 }
+
+
 
 
 
