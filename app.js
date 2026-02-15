@@ -55,7 +55,6 @@ try {
   scheduleData = DEFAULT_SCHEDULE;
 }
 
-
 const sectorsGroup = document.getElementById("sectors");
 const activityLabel = document.getElementById("current-activity");
 
@@ -176,7 +175,6 @@ function playTransitionSound() {
   }
 }
 
-/* Optional speech helper – only if you want verbal prompts
 function speak(text) {
   if (!("speechSynthesis" in window)) return;
   const utterance = new SpeechSynthesisUtterance(text);
@@ -184,7 +182,6 @@ function speak(text) {
   utterance.pitch = 1.0;
   window.speechSynthesis.speak(utterance);
 }
-*/
 
 /* ---------- Main update loop ---------- */
 
@@ -204,20 +201,23 @@ function updateClock() {
     currentMode = newMode;
     document.body.className = `${newMode}-mode`;
 
-    const scheduleType = isWeekend ? "weekend" : "mon_fri";
-    const tasks = scheduleData[scheduleType][newMode];
+    const scheduleTypeAtModeChange = isWeekend ? "weekend" : "mon_fri";
+    const tasksAtModeChange = scheduleData[scheduleTypeAtModeChange][newMode];
 
     sectorsGroup.innerHTML = "";
 
-    const currentIdx = getCurrentActivity(tasks, currentMinutes);
-    currentActivityIndex = currentIdx;
+    const currentIdxAtModeChange = getCurrentActivity(
+      tasksAtModeChange,
+      currentMinutes
+    );
+    currentActivityIndex = currentIdxAtModeChange;
 
-    tasks.forEach((task, idx) => {
+    tasksAtModeChange.forEach((task, idx) => {
       let startDeg = getAngles(task.start);
       let endDeg = getAngles(task.end);
       if (endDeg <= startDeg) endDeg += 360;
 
-      const isCurrent = idx === currentIdx;
+      const isCurrent = idx === currentIdxAtModeChange;
       const sector = createSector(startDeg, endDeg, task.color, isCurrent);
       sectorsGroup.appendChild(sector);
 
@@ -233,6 +233,12 @@ function updateClock() {
 
   // If activity changed, redraw highlight + icon
   if (currentIdx !== currentActivityIndex) {
+    // Voice line when the new activity starts
+    if (currentIdx >= 0 && currentIdx < tasks.length) {
+      const newTask = tasks[currentIdx];
+      speak(`It's time for ${newTask.label}.`);
+    }
+
     currentActivityIndex = currentIdx;
     transitionWarningShown = false;
 
@@ -252,7 +258,7 @@ function updateClock() {
     });
   }
 
-  // Transition warning: 5 minutes before end of current wedge
+  // Transition warning: current activity ending soon (within 5 minutes)
   if (currentIdx >= 0 && currentIdx < tasks.length) {
     const currentTask = tasks[currentIdx];
 
@@ -275,17 +281,8 @@ function updateClock() {
         document.body.classList.remove("transition-warning");
       }, 3000);
 
-      // Optional spoken prompts:
-      /*
-      if (minutesLeft === 5) {
-        const nextTask = tasks[(currentIdx + 1) % tasks.length];
-        speak(`5 minutes until ${nextTask.label}.`);
-      }
-      if (minutesLeft === 1) {
-        const nextTask = tasks[(currentIdx + 1) % tasks.length];
-        speak(`1 minute until ${nextTask.label}.`);
-      }
-      */
+      // Tell the child that the current activity is ending soon
+      speak(`${currentTask.label} is ending soon.`);
     }
   }
 
@@ -317,5 +314,6 @@ function updateClock() {
 
 setInterval(updateClock, 1000);
 updateClock();
+
 
 
