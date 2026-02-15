@@ -362,7 +362,6 @@
       calm: ["#a5b4fc", "#7dd3fc", "#6ee7b7", "#fde68a", "#f9a8d4", "#c4b5fd"]
     };
 
-    // helper to add a blank activity row (up to 15)
     function addActivityRow(tbodyId) {
       const tbody = document.getElementById(tbodyId);
       const currentRows = tbody.querySelectorAll("tr").length;
@@ -378,150 +377,9 @@
       tbody.appendChild(tr);
     }
 
-    // hook up add-row buttons after DOM is ready
     document.addEventListener("DOMContentLoaded", () => {
-      const map = [
-        ["add-weekday-day-row", "weekday-day-rows"],
-        ["add-weekday-night-row", "weekday-night-rows"],
-        ["add-weekend-day-row", "weekend-day-rows"],
-        ["add-weekend-night-row", "weekend-night-rows"]
-      ];
-      map.forEach(([btnId, tbodyId]) => {
-        const btn = document.getElementById(btnId);
-        if (btn) {
-          btn.addEventListener("click", () => addActivityRow(tbodyId));
-        }
-      });
-    });
+      c
 
-    // Load existing schedule if present (prefill tables)
-    (function loadExisting() {
-      try {
-        const raw = localStorage.getItem("routineClockSchedule");
-        if (!raw) return;
-        const data = JSON.parse(raw);
-
-        if (data && data.palette && document.querySelector(`input[name="palette"][value="${data.palette}"]`)) {
-          document.querySelector(`input[name="palette"][value="${data.palette}"]`).checked = true;
-        }
-
-        function ensureRows(count, tbodySelector) {
-          const tbody = document.querySelector(tbodySelector);
-          if (!tbody) return;
-          while (tbody.querySelectorAll("tr").length < count && tbody.querySelectorAll("tr").length < 15) {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <td><input type="text" value="" /></td>
-              <td><input type="time" value="" /></td>
-              <td><input type="time" value="" /></td>
-              <td><input type="text" value="" /></td>
-            `;
-            tbody.appendChild(tr);
-          }
-        }
-
-        function fillTable(tasks, tbodySelector) {
-          if (!tasks) return;
-          ensureRows(tasks.length, tbodySelector);
-          const rows = document.querySelectorAll(`${tbodySelector} tr`);
-          tasks.forEach((task, i) => {
-            if (!rows[i]) return;
-            const inputs = rows[i].querySelectorAll("input");
-            inputs[0].value = task.label || "";
-            inputs[1].value = task.start || "";
-            inputs[2].value = task.end || "";
-            inputs[3].value = task.icon || "";
-          });
-        }
-
-        if (data.mon_fri) {
-          fillTable(data.mon_fri.day, "#weekday-day-rows");
-          fillTable(data.mon_fri.night, "#weekday-night-rows");
-        }
-        if (data.weekend) {
-          fillTable(data.weekend.day, "#weekend-day-rows");
-          fillTable(data.weekend.night, "#weekend-night-rows");
-        }
-      } catch (e) {
-        console.error("Error loading existing schedule", e);
-      }
-    })();
-
-    function collectTasks(tableId, colors) {
-      const rows = document.querySelectorAll(`#${tableId} tr`);
-      const tasks = [];
-      let colorIndex = 0;
-
-      rows.forEach(row => {
-        const inputs = row.querySelectorAll("input");
-        const label = inputs[0].value.trim();
-        const start = inputs[1].value;
-        const end = inputs[2].value;
-        const icon = inputs[3].value.trim();
-
-        if (!label || !start || !end) return;
-
-        const color = colors[colorIndex % colors.length];
-        colorIndex++;
-
-        tasks.push({ label, start, end, color, icon: icon || "⬤" });
-      });
-
-      return tasks;
-    }
-
-    document.getElementById("save-and-open").addEventListener("click", () => {
-      const status = document.getElementById("status");
-      status.textContent = "";
-
-      const paletteInput = document.querySelector('input[name="palette"]:checked');
-      const paletteKey = paletteInput ? paletteInput.value : "soft";
-      const colors = PALETTES[paletteKey];
-
-      const weekdayDay = collectTasks("weekday-day-rows", colors);
-      const weekdayNight = collectTasks("weekday-night-rows", colors);
-      const weekendDay = collectTasks("weekend-day-rows", colors);
-      const weekendNight = collectTasks("weekend-night-rows", colors);
-
-      if (
-        weekdayDay.length === 0 &&
-        weekdayNight.length === 0 &&
-        weekendDay.length === 0 &&
-        weekendNight.length === 0
-      ) {
-        status.textContent = "Please add at least one activity before saving.";
-        return;
-      }
-
-      const scheduleData = {
-        palette: paletteKey,
-        mon_fri: {
-          day: weekdayDay,
-          night: weekdayNight
-        },
-        weekend: {
-          day: weekendDay,
-          night: weekendNight
-        }
-      };
-
-      try {
-        localStorage.setItem("routineClockSchedule", JSON.stringify(scheduleData));
-        status.textContent = "Schedule saved on this device. Opening clock…";
-        window.location.href = "clock.html";
-      } catch (e) {
-        console.error("Error saving schedule", e);
-        status.textContent = "There was a problem saving. Make sure this browser allows local storage.";
-      }
-    });
-
-    document.getElementById("clear-schedule").addEventListener("click", () => {
-      localStorage.removeItem("routineClockSchedule");
-      document.getElementById("status").textContent = "Saved schedule cleared on this device.";
-    });
-  </script>
-</body>
-</html>
 
 
 
