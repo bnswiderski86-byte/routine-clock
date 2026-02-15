@@ -1,51 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextUp Routine Clock</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NextUp Routine Clock</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="clock-container">
-        <svg id="clock-svg" viewBox="0 0 200 200">
-    <g id="sectors"></g>
-    
-    <circle cx="100" cy="100" r="98" fill="none" stroke="#333" stroke-width="4"/>
+  <div class="clock-container">
+    <svg id="clock-svg" viewBox="0 0 200 200">
+      <g id="sectors"></g>
 
-   <g id="hour-hand">
-    <line x1="100" y1="100" x2="100" y2="65" stroke="black" stroke-width="4" stroke-linecap="round" />
-    
-    <polygon points="100,45 93,65 107,65" fill="black" />
-</g>
-    <line id="minute-hand" x1="100" y1="100" x2="100" y2="30" stroke="#555" stroke-width="4" stroke-linecap="round" />
-    <line id="second-hand" x1="100" y1="100" x2="100" y2="20" stroke="red" stroke-width="2" stroke-linecap="round" />
-    <circle cx="100" cy="100" r="4" fill="#333" />
-</svg>
+      <circle cx="100" cy="100" r="98" fill="none" stroke="#333" stroke-width="4" />
 
-        <div id="current-activity">Loading...</div>
+      <g id="hour-hand">
+        <line x1="100" y1="100" x2="100" y2="65"
+              stroke="black" stroke-width="4" stroke-linecap="round" />
+        <polygon points="100,45 93,65 107,65" fill="black" />
+      </g>
 
-<div style="margin-top: 0.75rem;">
-  <button
-    id="edit-schedule"
-    style="
-      padding: 0.4rem 0.8rem;
-      font-size: 0.9rem;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      background: #e5e7eb;
-      color: #111827;
-    "
-    type="button"
-  >
-    Edit schedule
-  </button>
-</div>
+      <line id="minute-hand" x1="100" y1="100" x2="100" y2="30"
+            stroke="#555" stroke-width="4" stroke-linecap="round" />
+      <line id="second-hand" x1="100" y1="100" x2="100" y2="20"
+            stroke="red" stroke-width="2" stroke-linecap="round" />
+      <circle cx="100" cy="100" r="4" fill="#333" />
+    </svg>
 
+    <div id="current-activity">Loading...</div>
 
-    <script src="app.js"></script>
+    <div style="margin-top: 0.75rem;">
+      <button
+        id="edit-schedule"
+        type="button"
+        style="
+          padding: 0.4rem 0.8rem;
+          font-size: 0.9rem;
+          border-radius: 6px;
+          border: none;
+          cursor: pointer;
+          background: #e5e7eb;
+          color: #111827;
+        "
+      >
+        Edit schedule
+      </button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
+
+
 
 
