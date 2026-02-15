@@ -232,59 +232,100 @@
   </div>
 
   <!-- Weekend day -->
-  <div class="section">
-    <h2>4. Weekend daytime schedule (Sat–Sun)</h2>
-    <p class="small-note">What weekends usually look like.</p>
-    <table>
-      <thead>
-        <tr>
-          <th>Activity</th>
-          <th>Start</th>
-          <th>End</th>
-          <th>Icon (emoji)</th>
-        </tr>
-      </thead>
-      <tbody id="weekend-day-rows">
-        <tr>
-          <td><input type="text" value="Wake up" /></td>
-          <td><input type="time" value="08:00" /></td>
-          <td><input type="time" value="08:30" /></td>
-          <td><input type="text" value="⏰" /></td>
-        </tr>
-        <tr>
-          <td><input type="text" value="Breakfast" /></td>
-          <td><input type="time" value="08:30" /></td>
-          <td><input type="time" value="09:00" /></td>
-          <td><input type="text" value="🥞" /></td>
-        </tr>
-        <tr>
-          <td><input type="text" value="Free play / Outing" /></td>
-          <td><input type="time" value="09:00" /></td>
-          <td><input type="time" value="12:00" /></td>
-          <td><input type="text" value="🧸" /></td>
-        </tr>
-        <tr>
-          <td><input type="text" value="Lunch" /></td>
-          <td><input type="time" value="12:00" /></td>
-          <td><input type="time" value="13:00" /></td>
-          <td><input type="text" value="🥪" /></td>
-        </tr>
-        <tr>
-          <td><input type="text" value="Afternoon play" /></td>
-          <td><input type="time" value="13:00" /></td>
-          <td><input type="time" value="17:00" /></td>
-          <td><input type="text" value="🎨" /></td>
-        </tr>
-        <tr>
-          <td><input type="text" value="Dinner" /></td>
-          <td><input type="time" value="17:00" /></td>
-          <td><input type="time" value="18:00" /></td>
-          <td><input type="text" value="🍽️" /></td>
-        </tr>
-      </tbody>
-    </table>
-    <p class="small-note">Weekend nights will use the same night schedule as weekdays for now.</p>
-  </div>
+<div class="section">
+  <h2>4. Weekend daytime schedule (Sat–Sun)</h2>
+  <p class="small-note">What weekends usually look like.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Activity</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Icon (emoji)</th>
+      </tr>
+    </thead>
+    <tbody id="weekend-day-rows">
+      <tr>
+        <td><input type="text" value="Wake up" /></td>
+        <td><input type="time" value="08:00" /></td>
+        <td><input type="time" value="08:30" /></td>
+        <td><input type="text" value="⏰" /></td>
+      </tr>
+      <tr>
+        <td><input type="text" value="Breakfast" /></td>
+        <td><input type="time" value="08:30" /></td>
+        <td><input type="time" value="09:00" /></td>
+        <td><input type="text" value="🥞" /></td>
+      </tr>
+      <tr>
+        <td><input type="text" value="Free play / Outing" /></td>
+        <td><input type="time" value="09:00" /></td>
+        <td><input type="time" value="12:00" /></td>
+        <td><input type="text" value="🧸" /></td>
+      </tr>
+      <tr>
+        <td><input type="text" value="Lunch" /></td>
+        <td><input type="time" value="12:00" /></td>
+        <td><input type="time" value="13:00" /></td>
+        <td><input type="text" value="🥪" /></td>
+      </tr>
+      <tr>
+        <td><input type="text" value="Afternoon play" /></td>
+        <td><input type="time" value="13:00" /></td>
+        <td><input type="time" value="17:00" /></td>
+        <td><input type="text" value="🎨" /></td>
+      </tr>
+      <tr>
+        <td><input type="text" value="Dinner" /></td>
+        <td><input type="time" value="17:00" /></td>
+        <td><input type="time" value="18:00" /></td>
+        <td><input type="text" value="🍽️" /></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <h2>5. Weekend night schedule (Sat–Sun)</h2>
+  <p class="small-note">Evening, bedtime, and sleep on weekends.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Activity</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Icon (emoji)</th>
+      </tr>
+    </thead>
+    <tbody id="weekend-night-rows">
+      <tr>
+        <td><input type="text" value="Screen / Chill" /></td>
+        <td><input type="time" value="18:00" /></td>
+        <td><input type="time" value="19:00" /></td>
+        <td><input type="text" value="📺" /></td>
+      </tr>
+      <tr>
+        <td><input type="text" value="Bath" /></td>
+        <td><input type="time" value="19:00" /></td>
+        <td><input type="time" value="19:30" /></td>
+        <td><input type="text" value="🛁" /></td>
+      </tr>
+      <tr>
+        <td><input type="text" value="Story / Wind down" /></td>
+        <td><input type="time" value="19:30" /></td>
+        <td><input type="time" value="20:00" /></td>
+        <td><input type="text" value="📖" /></td>
+      </tr>
+      <tr>
+        <td><input type="text" value="Sleep" /></td>
+        <td><input type="time" value="20:00" /></td>
+        <td><input type="time" value="08:00" /></td>
+        <td><input type="text" value="🌙" /></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 
   <!-- Save section -->
   <div class="section">
@@ -403,6 +444,7 @@
   </script>
 </body>
 </html>
+
 
 
 
