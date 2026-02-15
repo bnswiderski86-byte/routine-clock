@@ -138,9 +138,9 @@
     </div>
   </div>
 
-  <div class="section">
-    <h2>2. Day schedule (all days for now)</h2>
-    <p class="small-note">Later we can add separate weekday/weekend and night schedules. For now, fill in the main parts of the day.</p>
+   <div class="section">
+    <h2>2. Weekday daytime schedule (Mon–Fri)</h2>
+    <p class="small-note">Main daytime blocks for school / weekdays.</p>
     <table>
       <thead>
         <tr>
@@ -150,8 +150,7 @@
           <th>Icon (emoji)</th>
         </tr>
       </thead>
-      <tbody id="activity-rows">
-        <!-- 8 starter rows -->
+      <tbody id="weekday-day-rows">
         <tr>
           <td><input type="text" value="Wake up" /></td>
           <td><input type="time" value="07:00" /></td>
@@ -188,6 +187,24 @@
           <td><input type="time" value="18:00" /></td>
           <td><input type="text" value="🍽️" /></td>
         </tr>
+      </tbody>
+    </table>
+    <p class="small-note">Leave extra rows blank if you don’t need them.</p>
+  </div>
+
+  <div class="section">
+    <h2>3. Weekday night schedule (Mon–Fri)</h2>
+    <p class="small-note">Evening, bedtime, and sleep.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Activity</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Icon (emoji)</th>
+        </tr>
+      </thead>
+      <tbody id="weekday-night-rows">
         <tr>
           <td><input type="text" value="Screen / Chill" /></td>
           <td><input type="time" value="18:00" /></td>
@@ -195,15 +212,81 @@
           <td><input type="text" value="📺" /></td>
         </tr>
         <tr>
-          <td><input type="text" value="Bedtime routine" /></td>
+          <td><input type="text" value="Bath" /></td>
           <td><input type="time" value="19:00" /></td>
+          <td><input type="time" value="19:30" /></td>
+          <td><input type="text" value="🛁" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Story / Wind down" /></td>
+          <td><input type="time" value="19:30" /></td>
           <td><input type="time" value="20:00" /></td>
+          <td><input type="text" value="📖" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Sleep" /></td>
+          <td><input type="time" value="20:00" /></td>
+          <td><input type="time" value="07:00" /></td>
           <td><input type="text" value="🌙" /></td>
         </tr>
       </tbody>
     </table>
-    <p class="small-note">You can leave extra rows blank if you don’t need them.</p>
   </div>
+
+  <div class="section">
+    <h2>4. Weekend daytime schedule (Sat–Sun)</h2>
+    <p class="small-note">What weekends usually look like.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Activity</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Icon (emoji)</th>
+        </tr>
+      </thead>
+      <tbody id="weekend-day-rows">
+        <tr>
+          <td><input type="text" value="Wake up" /></td>
+          <td><input type="time" value="08:00" /></td>
+          <td><input type="time" value="08:30" /></td>
+          <td><input type="text" value="⏰" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Breakfast" /></td>
+          <td><input type="time" value="08:30" /></td>
+          <td><input type="time" value="09:00" /></td>
+          <td><input type="text" value="🥞" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Free play / Outing" /></td>
+          <td><input type="time" value="09:00" /></td>
+          <td><input type="time" value="12:00" /></td>
+          <td><input type="text" value="🧸" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Lunch" /></td>
+          <td><input type="time" value="12:00" /></td>
+          <td><input type="time" value="13:00" /></td>
+          <td><input type="text" value="🥪" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Afternoon play" /></td>
+          <td><input type="time" value="13:00" /></td>
+          <td><input type="time" value="17:00" /></td>
+          <td><input type="text" value="🎨" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" value="Dinner" /></td>
+          <td><input type="time" value="17:00" /></td>
+          <td><input type="time" value="18:00" /></td>
+          <td><input type="text" value="🍽️" /></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="small-note">Weekend nights will use the same night schedule as weekdays for now.</p>
+  </div>
+
 
   <div class="section">
     <h2>3. Save and open the clock</h2>
@@ -306,11 +389,71 @@
       }
     });
 
-    document.getElementById("clear-schedule").addEventListener("click", () => {
-      localStorage.removeItem("routineClockSchedule");
-      document.getElementById("status").textContent = "Saved schedule cleared on this device.";
+  document.getElementById("save-and-open").addEventListener("click", () => {
+  const status = document.getElementById("status");
+  status.textContent = "";
+
+  const paletteInput = document.querySelector('input[name="palette"]:checked');
+  const paletteKey = paletteInput ? paletteInput.value : "soft";
+  const colors = PALETTES[paletteKey];
+
+  function collectTasks(tableId) {
+    const rows = document.querySelectorAll(`#${tableId} tr`);
+    const tasks = [];
+    let colorIndex = 0;
+
+    rows.forEach(row => {
+      const inputs = row.querySelectorAll("input");
+      const label = inputs[0].value.trim();
+      const start = inputs[1].value;
+      const end = inputs[2].value;
+      const icon = inputs[3].value.trim();
+
+      if (!label || !start || !end) return;
+
+      const color = colors[colorIndex % colors.length];
+      colorIndex++;
+
+      tasks.push({ label, start, end, color, icon: icon || "⬤" });
     });
+
+    return tasks;
+  }
+
+  const weekdayDay = collectTasks("weekday-day-rows");
+  const weekdayNight = collectTasks("weekday-night-rows");
+  const weekendDay = collectTasks("weekend-day-rows");
+
+  if (weekdayDay.length === 0 && weekdayNight.length === 0 && weekendDay.length === 0) {
+    status.textContent = "Please add at least one activity before saving.";
+    return;
+  }
+
+  const scheduleData = {
+    palette: paletteKey,
+    mon_fri: {
+      day: weekdayDay,
+      night: weekdayNight
+    },
+    weekend: {
+      day: weekendDay,
+      // for now, weekend nights reuse the weekday night schedule
+      night: weekdayNight
+    }
+  };
+
+  try {
+    localStorage.setItem("routineClockSchedule", JSON.stringify(scheduleData));
+    status.textContent = "Schedule saved on this device. Opening clock…";
+    window.location.href = "clock.html";
+  } catch (e) {
+    console.error("Error saving schedule", e);
+    status.textContent = "There was a problem saving. Make sure this browser allows local storage.";
+  }
+});
+
   </script>
 </body>
 </html>
+
 
