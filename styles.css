@@ -22,11 +22,25 @@ body {
 /* vmin = "Viewport Minimum". It looks at height vs width and picks the smaller one. */
 /* We use 98vmin so it fills 98% of the screen, leaving a tiny safety edge. */
 .clock-container {
-  width: 98vmin;
-  height: 98vmin;
-  position: relative;
-  transition: transform 0.3s ease;
+  max-width: 350px;      /* overall size limit */
+  max-height: 350px;
+  margin: 0 auto;        /* center on page */
 }
+
+#clock-svg {
+  width: 100%;           /* scale to container */
+  height: auto;
+  display: block;
+}
+
+/* Smaller on phones */
+@media (max-width: 600px) {
+  .clock-container {
+    max-width: 260px;
+    max-height: 260px;
+  }
+}
+
 
 /* 4. Make the SVG fill that container perfectly */
 svg {
@@ -168,4 +182,5 @@ svg text {
     font-size: 4vmin;
   }
 }
+
 
