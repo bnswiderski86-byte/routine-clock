@@ -141,6 +141,16 @@
           <span style="background:#fde68a"></span>
         </span>
       </label>
+      <label class="swatch">
+        <input type="radio" name="palette" value="neutrals" />
+        <span>Neutrals</span>
+        <span class="swatch-colors">
+          <span style="background:#e5e7eb"></span>
+          <span style="background:#d1d5db"></span>
+          <span style="background:#9ca3af"></span>
+          <span style="background:#6b7280"></span>
+        </span>
+      </label>
     </div>
   </div>
 
@@ -385,7 +395,8 @@
     const PALETTES = {
       soft: ["#fde68a", "#bfdbfe", "#bbf7d0", "#fecaca", "#e9d5ff", "#fee2e2"],
       bold: ["#f97316", "#22c55e", "#3b82f6", "#e11d48", "#a855f7", "#0ea5e9"],
-      calm: ["#a5b4fc", "#7dd3fc", "#6ee7b7", "#fde68a", "#f9a8d4", "#c4b5fd"]
+      calm: ["#a5b4fc", "#7dd3fc", "#6ee7b7", "#fde68a", "#f9a8d4", "#c4b5fd"], 
+        neutrals: ["#e5e7eb", "#d1d5db", "#9ca3af", "#6b7280", "#4b5563", "#374151"]
     };
 
     function addActivityRow(tbodyId) {
@@ -576,6 +587,7 @@ function fillTable(tasks, tbodySelector) {
   </script>
 </body>
 </html>
+
 
 
 
