@@ -7,8 +7,12 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="clock-container">
-    <svg id="clock-svg" viewBox="0 0 200 200">
+  <div class="clock-container" style="max-width: 400px; margin: 0 auto;">
+    <svg
+      id="clock-svg"
+      viewBox="0 0 200 200"
+      style="width: 90vmin; max-width: 400px; height: auto;"
+    >
       <g id="sectors"></g>
 
       <circle cx="100" cy="100" r="98" fill="none" stroke="#333" stroke-width="4" />
@@ -25,6 +29,7 @@
             stroke="red" stroke-width="2" stroke-linecap="round" />
       <circle cx="100" cy="100" r="4" fill="#333" />
     </svg>
+
 
     <div id="current-activity">Loading...</div>
 
@@ -50,6 +55,7 @@
   <script src="app.js"></script>
 </body>
 </html>
+
 
 
 
