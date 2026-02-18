@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NextUp Routine Clock</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css"><!-- keep your existing CSS filename -->
 </head>
 <body>
   <!-- Intro / description -->
-  <header style="max-width: 700px; margin: 1rem auto 0.5rem; padding: 0 0.5rem;">
+  <header style="max-width: 700px; margin: 1rem auto 0.5rem; padding: 0 0.5rem; text-align: center;">
     <h1 style="margin: 0 0 0.5rem; font-size: 1.6rem;">NextUp Routine Clock</h1>
     <p style="margin: 0 0 0.25rem; font-size: 0.95rem;">
-      This clock helps kids see what they are doing now and what comes next using colors,
-      icons, and simple voice prompts.
+      A visual routine clock that helps kids see what they are doing now and what comes next,
+      using colors, icons, and simple voice prompts.
     </p>
     <p style="margin: 0; font-size: 0.9rem; color: #4b5563;">
       Keep this page open on a tablet or phone. Tap <strong>Edit schedule</strong> to customize
@@ -21,65 +21,70 @@
   </header>
 
   <!-- Clock face -->
-  <div class="clock-container" style="max-width: 700px; margin: 1rem auto 0;">
-    <svg
-      id="clock-svg"
-      viewBox="0 0 200 200"
-      style="width: 95vmin; max-width: 700px; height: auto;"
-    >
+  <div class="clock-container">
+    <svg id="clock-svg" viewBox="0 0 200 200">
       <g id="sectors"></g>
 
+      <!-- Outer circle -->
       <circle cx="100" cy="100" r="98" fill="none" stroke="#333" stroke-width="4" />
 
+      <!-- Hour hand (arrow group) -->
       <g id="hour-hand">
         <line x1="100" y1="100" x2="100" y2="65"
               stroke="black" stroke-width="4" stroke-linecap="round" />
         <polygon points="100,45 93,65 107,65" fill="black" />
       </g>
 
+      <!-- Minute and second hands -->
       <line id="minute-hand" x1="100" y1="100" x2="100" y2="30"
             stroke="#555" stroke-width="4" stroke-linecap="round" />
       <line id="second-hand" x1="100" y1="100" x2="100" y2="20"
             stroke="red" stroke-width="2" stroke-linecap="round" />
+
+      <!-- Center dot -->
       <circle cx="100" cy="100" r="4" fill="#333" />
     </svg>
-
-    <div id="current-activity" style="margin-top: 0.5rem; text-align: center;">
-      Loading...
-    </div>
-
-    <!-- Setup / edit button -->
-    <div style="margin-top: 0.75rem; text-align: center;">
-      <button
-        id="edit-schedule"
-        type="button"
-        style="
-          padding: 0.5rem 1rem;
-          font-size: 0.95rem;
-          border-radius: 6px;
-          border: none;
-          cursor: pointer;
-          background: #e5e7eb;
-          color: #111827;
-        "
-      >
-        Edit schedule
-      </button>
-    </div>
   </div>
 
+  <!-- Current / next activity labels -->
+  <div id="current-activity">
+    Loading...
+  </div>
+
+  <!-- Edit schedule button -->
+  <div style="position: absolute; top: 1rem; right: 1rem;">
+    <button
+      id="edit-schedule"
+      type="button"
+      style="
+        padding: 0.4rem 0.9rem;
+        font-size: 0.9rem;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        background: #e5e7eb;
+        color: #111827;
+      "
+    >
+      Edit schedule
+    </button>
+  </div>
+
+  <!-- Clock logic -->
   <script src="app.js"></script>
+
+  <!-- Edit button behavior: go to setup page -->
   <script>
-    // Edit schedule button: go to parent setup page
     const editBtn = document.getElementById("edit-schedule");
     if (editBtn) {
       editBtn.addEventListener("click", () => {
-        window.location.href = "setup.html"; // your renamed parent page
+        window.location.href = "setup.html"; // make sure your parent page is named setup.html
       });
     }
   </script>
 </body>
 </html>
+
 
 
 
