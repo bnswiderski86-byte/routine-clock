@@ -76,32 +76,28 @@ body.night-mode .clock-number {
 /* ===== ENHANCED FEATURES ===== */
 
 /* Current activity highlighting */
-.current-activity {
-  opacity: 0.9 !important;
-  filter: brightness(1.15);
-}
-
-/* Pulsing animation for current activity emoji:
-   grow/shrink in place */
 .current-icon {
   animation: iconPulse 1.5s ease-in-out infinite !important;
-  transform-origin: center center;  /* keep pulse centered on the icon */
+  transform-origin: center center;
 }
 
+/* Pulse inward toward the clock center */
 @keyframes iconPulse {
   0% {
-    transform: scale(1);
+    transform: translate(0, 0) scale(1);
     opacity: 1;
   }
   50% {
-    transform: scale(1.25);  /* gentle grow */
+    /* move slightly toward center (negative Y in SVG is up; adjust if needed) */
+    transform: translate(0, -3px) scale(1.2);
     opacity: 0.85;
   }
   100% {
-    transform: scale(1);
+    transform: translate(0, 0) scale(1);
     opacity: 1;
   }
 }
+
 
 /* Transition warning pulse effect */
 body.transition-warning .clock-container {
@@ -178,6 +174,7 @@ svg text {
     font-size: 4vmin;
   }
 }
+
 
 
 
