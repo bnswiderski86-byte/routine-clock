@@ -62,14 +62,16 @@ body.night-mode .clock-number {
   fill: #fff;
 }
 
-/* Night Mode for the Arrow Hand */
-body.night-mode #hour-hand line {
-  stroke: white;
+/* Night Mode Text */
+body.night-mode {
+  color: #ffffff;
 }
 
-body.night-mode #hour-hand polygon {
-  fill: white;
+body.night-mode h1,
+body.night-mode p {
+  color: #ffffff;
 }
+
 
 /* ===== ENHANCED FEATURES ===== */
 
@@ -174,6 +176,7 @@ svg text {
     font-size: 4vmin;
   }
 }
+
 
 
 
