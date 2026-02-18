@@ -106,7 +106,7 @@ function createIcon(startAngle, endAngle, iconChar, isCurrent) {
   let midAngle = startAngle + diff / 2;
   const midRad = ((midAngle - 90) * Math.PI) / 180;
 
-  const baseR = 78;         // normal icons
+  const baseR = 83;         // normal icons
   const r = isCurrent ? 70  : baseR;  // pull current one inward
 
   const cx = 100;
@@ -327,6 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
 
 
 
