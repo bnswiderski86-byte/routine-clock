@@ -131,31 +131,37 @@
     margin-top: 1rem;
   }
   
+  /* Key fix: Much more vertical space in table rows */
   th, td {
-    padding: 1rem 0.5rem;
+    padding: 1.25rem 0.5rem;
   }
   
   th {
     font-size: 1rem;
+    padding-bottom: 0.75rem;
   }
   
-  /* Much bigger touch targets for inputs */
+  /* Add space between rows */
+  tbody tr {
+    border-bottom: 8px solid #f5f7fb;
+  }
+  
+  /* Bigger inputs with more internal padding */
   input[type="text"], input[type="time"] {
-    padding: 0.75rem;
-    font-size: 1.1rem;
+    padding: 0.85rem 0.6rem;
+    font-size: 1.05rem;
     border: 2px solid #d1d5db;
     border-radius: 6px;
-    min-height: 48px;
-  }
-  
-  /* Bigger buttons */
-  button {
-    padding: 1rem 1.5rem;
-    font-size: 1.1rem;
     min-height: 50px;
   }
   
-  /* Stack buttons vertically */
+  /* Keep buttons reasonable size */
+  button {
+    padding: 0.85rem 1.25rem;
+    font-size: 1rem;
+    min-height: 48px;
+  }
+  
   .buttons, .row-buttons {
     flex-direction: column;
     gap: 1rem;
@@ -166,7 +172,6 @@
     width: 100%;
   }
   
-  /* Palette swatches */
   .palette-swatches {
     flex-direction: column;
     gap: 1rem;
@@ -184,7 +189,6 @@
     height: 20px;
   }
   
-  /* Larger text */
   p, .small-note {
     font-size: 1rem;
     line-height: 1.6;
@@ -198,17 +202,18 @@
     padding: 1rem;
   }
   
-  table {
-    font-size: 0.95rem;
+  th, td {
+    padding: 1rem 0.4rem;
   }
   
-  th, td {
-    padding: 0.85rem 0.4rem;
+  tbody tr {
+    border-bottom: 6px solid #f5f7fb;
   }
   
   input[type="text"], input[type="time"] {
     font-size: 1rem;
-    padding: 0.65rem;
+    padding: 0.75rem 0.5rem;
+    min-height: 48px;
   }
 }
   </style>
@@ -713,6 +718,7 @@
   </script>
 </body>
 </html>
+
 
 
 
