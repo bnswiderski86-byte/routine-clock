@@ -180,28 +180,50 @@ function playTransitionSound() {
 
 // Select best calm female voice for each platform
 let selectedVoice = null;
+let voicesLoaded = false;
 
-window.speechSynthesis.onvoiceschanged = () => {
+// Load voices (Chrome needs this)
+function loadVoices() {
   const voices = window.speechSynthesis.getVoices();
   
-  selectedVoice = voices.find(v => v.name.includes("Sonia")) ||           // Windows
-                  voices.find(v => v.name.includes("Samantha")) ||        // macOS/iOS
-                  voices.find(v => v.name.includes("Victoria")) ||        // macOS/iOS
-                  voices.find(v => v.name.includes("Fiona")) ||           // macOS/iOS
-                  voices.find(v => v.name.includes("Google") && v.name.includes("Female")) || // Android
-                  voices.find(v => v.name.includes("Wavenet-F")) ||       // Android Cloud
-                  voices.find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("female")) ||
-                  voices[0];
-};
+  if (voices.length > 0) {
+    voicesLoaded = true;
+    
+    selectedVoice = voices.find(v => v.name.includes("Sonia")) ||           // Windows
+                    voices.find(v => v.name.includes("Samantha")) ||        // macOS/iOS
+                    voices.find(v => v.name.includes("Victoria")) ||        // macOS/iOS
+                    voices.find(v => v.name.includes("Google") && v.name.includes("Female")) || // Android
+                    voices.find(v => v.name.includes("Wavenet")) ||         // Android Cloud
+                    voices.find(v => v.name.toLowerCase().includes("female")) ||
+                    // Explicitly avoid David, Zira, Mark, and other male voices
+                    voices.find(v => v.lang.startsWith("en") && 
+                                     !v.name.includes("David") && 
+                                     !v.name.includes("Mark") &&
+                                     !v.name.includes("George")) ||
+                    voices[voices.length - 1];  // Use last voice as fallback (often female)
+    
+    console.log("Using voice:", selectedVoice?.name);
+  }
+}
+
+// Chrome needs both methods
+window.speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
 
 function speak(text) {
   if (!("speechSynthesis" in window)) return;
+  
+  if (!voicesLoaded) {
+    loadVoices();
+  }
+  
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = 0.85;   // calm pace
+  utterance.rate = 0.85;
   utterance.pitch = 1.0;
   if (selectedVoice) utterance.voice = selectedVoice;
   window.speechSynthesis.speak(utterance);
 }
+
 
 
 /* ---------- Main update loop ---------- */
@@ -353,6 +375,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
 
 
 
