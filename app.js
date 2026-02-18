@@ -316,12 +316,16 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // Edit schedule button: go to setup page
-const editBtn = document.getElementById("edit-schedule");
-if (editBtn) {
-  editBtn.addEventListener("click", () => {
-    window.location.href = "setup.html";  // use your actual setup filename
-  });
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const editBtn = document.getElementById("edit-schedule");
+  if (editBtn) {
+    editBtn.addEventListener("click", () => {
+      window.location.href = "./setup.html";  // setup.html in same folder
+    });
+  }
+});
+
+
 
 
 
