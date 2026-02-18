@@ -100,6 +100,116 @@
       margin-top: 0.5rem;
       flex-wrap: wrap;
     }
+    /* Add this at the end of your existing <style> section, before </style> */
+
+/* Mobile-optimized layout */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 0.75rem;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.2rem;
+  }
+  
+  .section {
+    padding: 1rem 0.75rem;
+  }
+  
+  /* Make tables full width and improve spacing */
+  table {
+    font-size: 1rem;
+  }
+  
+  th, td {
+    padding: 0.6rem 0.3rem;
+  }
+  
+  /* Bigger touch targets for inputs */
+  input[type="text"], input[type="time"] {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+  }
+  
+  /* Stack table on very small screens */
+  @media (max-width: 480px) {
+    /* Make table scrollable horizontally if needed */
+    .section {
+      overflow-x: auto;
+    }
+    
+    table {
+      min-width: 100%;
+      font-size: 0.95rem;
+    }
+    
+    th, td {
+      padding: 0.5rem 0.25rem;
+      font-size: 0.9rem;
+    }
+    
+    /* Adjust column widths */
+    th:first-child, td:first-child {
+      width: 30%;
+    }
+    
+    th:nth-child(2), td:nth-child(2),
+    th:nth-child(3), td:nth-child(3) {
+      width: 25%;
+    }
+    
+    th:last-child, td:last-child {
+      width: 20%;
+    }
+  }
+  
+  /* Bigger buttons for easier tapping */
+  button {
+    padding: 0.75rem 1.25rem;
+    font-size: 1.05rem;
+    min-height: 44px; /* iOS recommended touch target */
+  }
+  
+  /* Better button layout on mobile */
+  .buttons, .row-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .buttons button, .row-buttons button {
+    width: 100%;
+  }
+  
+  /* Palette swatches - stack vertically on small screens */
+  .palette-swatches {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .swatch {
+    padding: 0.5rem;
+    background: #f9fafb;
+    border-radius: 6px;
+  }
+  
+  .swatch-colors span {
+    width: 18px;
+    height: 18px;
+  }
+  
+  /* Larger text for readability */
+  p, .small-note {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -594,6 +704,7 @@
   </script>
 </body>
 </html>
+
 
 
 
