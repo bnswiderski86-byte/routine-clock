@@ -224,8 +224,6 @@ function speak(text) {
   window.speechSynthesis.speak(utterance);
 }
 
-
-
 /* ---------- Main update loop ---------- */
 
 function updateClock() {
@@ -239,43 +237,45 @@ function updateClock() {
   const newMode = h >= 7 && h < 19 ? "day" : "night";
   const isWeekend = day === 0 || day === 6;
 
- // When mode changes (day/night), rebuild sectors/icons
-if (newMode !== currentMode) {
-  currentMode = newMode;
-  document.body.className = `${newMode}-mode`;
+  // When mode changes (day/night), rebuild sectors/icons
+  if (newMode !== currentMode) {
+    const isFirstLoad = currentMode === "";  // Check if this is initial page load
+    currentMode = newMode;
+    document.body.className = `${newMode}-mode`;
 
-  // Announce the mode change
-  if (newMode === "day") {
-    speak("Good morning! Day mode starting.");
-  } else {
-    speak("Good evening! Night mode starting.");
+    // Only announce mode change if NOT the first load
+    if (!isFirstLoad) {
+      if (newMode === "day") {
+        speak("Good morning! Day mode starting.");
+      } else {
+        speak("Good evening! Night mode starting.");
+      }
+    }
+
+    const scheduleTypeAtModeChange = isWeekend ? "weekend" : "mon_fri";
+    const tasksAtModeChange = scheduleData[scheduleTypeAtModeChange][newMode];
+
+    sectorsGroup.innerHTML = "";
+
+    const currentIdxAtModeChange = getCurrentActivity(
+      tasksAtModeChange,
+      currentMinutes
+    );
+    currentActivityIndex = currentIdxAtModeChange;
+
+    tasksAtModeChange.forEach((task, idx) => {
+      let startDeg = getAngles(task.start);
+      let endDeg = getAngles(task.end);
+      if (endDeg <= startDeg) endDeg += 360;
+
+      const isCurrent = idx === currentIdxAtModeChange;
+      const sector = createSector(startDeg, endDeg, task.color, isCurrent);
+      sectorsGroup.appendChild(sector);
+
+      const icon = createIcon(startDeg, endDeg, task.icon, isCurrent);
+      if (icon) sectorsGroup.appendChild(icon);
+    });
   }
-
-  const scheduleTypeAtModeChange = isWeekend ? "weekend" : "mon_fri";
-  const tasksAtModeChange = scheduleData[scheduleTypeAtModeChange][newMode];
-
-  sectorsGroup.innerHTML = "";
-
-  const currentIdxAtModeChange = getCurrentActivity(
-    tasksAtModeChange,
-    currentMinutes
-  );
-  currentActivityIndex = currentIdxAtModeChange;
-
-  tasksAtModeChange.forEach((task, idx) => {
-    let startDeg = getAngles(task.start);
-    let endDeg = getAngles(task.end);
-    if (endDeg <= startDeg) endDeg += 360;
-
-    const isCurrent = idx === currentIdxAtModeChange;
-    const sector = createSector(startDeg, endDeg, task.color, isCurrent);
-    sectorsGroup.appendChild(sector);
-
-    const icon = createIcon(startDeg, endDeg, task.icon, isCurrent);
-    if (icon) sectorsGroup.appendChild(icon);
-  });
-}
-
 
   // Always compute current activity
   const scheduleType = isWeekend ? "weekend" : "mon_fri";
@@ -326,13 +326,13 @@ if (newMode !== currentMode) {
 
     if (minutesLeft <= 5 && minutesLeft > 0 && !transitionWarningShown) {
       transitionWarningShown = true;
-      playTransitionSound();
+      // REMOVED: No more transition chime sound
       document.body.classList.add("transition-warning");
       setTimeout(() => {
         document.body.classList.remove("transition-warning");
       }, 3000);
 
-      // Tell the child that the current activity is ending soon
+      // Tell the child that the current activity is ending soon (voice only)
       speak(`${currentTask.label} is ending soon.`);
     }
   }
@@ -375,14 +375,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
-
-
-
-
-
-
-
 
 
 
