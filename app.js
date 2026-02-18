@@ -178,13 +178,31 @@ function playTransitionSound() {
   }
 }
 
+// Select best calm female voice for each platform
+let selectedVoice = null;
+
+window.speechSynthesis.onvoiceschanged = () => {
+  const voices = window.speechSynthesis.getVoices();
+  
+  selectedVoice = voices.find(v => v.name.includes("Sonia")) ||           // Windows
+                  voices.find(v => v.name.includes("Samantha")) ||        // macOS/iOS
+                  voices.find(v => v.name.includes("Victoria")) ||        // macOS/iOS
+                  voices.find(v => v.name.includes("Fiona")) ||           // macOS/iOS
+                  voices.find(v => v.name.includes("Google") && v.name.includes("Female")) || // Android
+                  voices.find(v => v.name.includes("Wavenet-F")) ||       // Android Cloud
+                  voices.find(v => v.lang.startsWith("en") && v.name.toLowerCase().includes("female")) ||
+                  voices[0];
+};
+
 function speak(text) {
   if (!("speechSynthesis" in window)) return;
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = 0.9;
+  utterance.rate = 0.85;   // calm pace
   utterance.pitch = 1.0;
+  if (selectedVoice) utterance.voice = selectedVoice;
   window.speechSynthesis.speak(utterance);
 }
+
 
 /* ---------- Main update loop ---------- */
 
@@ -335,6 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
 
 
 
