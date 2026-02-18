@@ -69,9 +69,9 @@ body {
 /* Bigger on phones - fills most of screen */
 @media (max-width: 600px) {
   .clock-container {
-    width: 98vw;
-    max-width: 98vw;
-    max-height: 98vw;
+    width: 92vw;
+    max-width: 92vw;
+    max-height: 92vw;
     margin-top: 0.25rem;
   }
   .landing-header {
@@ -235,6 +235,7 @@ svg text {
     font-size: 4vmin;
   }
 }
+
 
 
 
