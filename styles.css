@@ -5,26 +5,19 @@
   padding: 0;
 }
 
-/* 2. Lock the body to the screen size (No scrolling allowed!) */
+/* 2. Page layout */
 body {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden; /* This kills the scrollbars */
+  min-height: 100vh;
   background-color: #f0f8ff; /* Day color default */
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-family: sans-serif;
   transition: background-color 0.5s ease;
 }
 
 /* 3. The Clock Container */
-/* vmin = "Viewport Minimum". It looks at height vs width and picks the smaller one. */
-/* We use 98vmin so it fills 98% of the screen, leaving a tiny safety edge. */
 .clock-container {
-  max-width: 350px;      /* overall size limit */
-  max-height: 350px;
-  margin: 0 auto;        /* center on page */
+  max-width: 500px;      /* overall size limit on larger screens */
+  max-height: 500px;
+  margin: 1rem auto 0;   /* center on page, below header */
 }
 
 #clock-svg {
@@ -36,11 +29,10 @@ body {
 /* Smaller on phones */
 @media (max-width: 600px) {
   .clock-container {
-    max-width: 260px;
-    max-height: 260px;
+    max-width: 340px;
+    max-height: 340px;
   }
 }
-
 
 /* 4. Make the SVG fill that container perfectly */
 svg {
@@ -63,7 +55,7 @@ body.night-mode {
   font-size: 16px; /* Slightly larger for small screens */
   font-weight: bold;
   fill: #333;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 body.night-mode .clock-number {
@@ -87,7 +79,7 @@ body.night-mode #hour-hand polygon {
   filter: brightness(1.15);
 }
 
-/* Pulsing animation for current activity emoji - STRONGER VERSION */
+/* Pulsing animation for current activity emoji */
 .current-icon {
   animation: iconPulse 1.5s ease-in-out infinite !important;
   transform-origin: center center;
@@ -182,5 +174,7 @@ svg text {
     font-size: 4vmin;
   }
 }
+
+
 
 
