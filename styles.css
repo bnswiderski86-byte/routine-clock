@@ -5,12 +5,49 @@
   padding: 0;
 }
 
-/* 2. Page layout */
+/* 2. Page layout - with Safari fixes */
 body {
   min-height: 100vh;
-  background-color: #f0f8ff; /* Day color default */
+  min-height: -webkit-fill-available; /* Safari fix */
+  background-color: #f0f8ff;
   font-family: sans-serif;
   transition: background-color 0.5s ease, color 0.5s ease;
+  -webkit-text-size-adjust: 100%; /* Prevent text scaling */
+}
+
+/* Page shell centering */
+.page-shell {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem 0.75rem 0; /* Add side padding for mobile */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Landing header - better mobile spacing */
+.landing-header {
+  text-align: center;
+  margin-bottom: 1rem;
+  width: 100%;
+  padding: 0 0.5rem; /* Add breathing room on small screens */
+}
+
+.landing-header h1 {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem; /* Slightly smaller on mobile */
+  line-height: 1.3;
+}
+
+.landing-header p {
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.landing-header .landing-sub {
+  color: #4b5563;
+  font-size: 0.85rem;
 }
 
 /* 3. The Clock Container */
@@ -40,6 +77,12 @@ svg {
   width: 100%;
   height: 100%;
   display: block; /* Removes tiny hidden gaps for text alignment */
+}
+
+/* Safari emoji fix */
+svg text {
+  -webkit-font-smoothing: antialiased;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI Emoji", sans-serif;
 }
 
 /* Day / Night Colors */
@@ -76,6 +119,12 @@ body.night-mode .clock-number {
 /* ===== ENHANCED FEATURES ===== */
 
 /* Current activity highlighting */
+.current-activity {
+  opacity: 0.9 !important;
+  filter: brightness(1.15);
+}
+
+/* Pulsing animation for current activity emoji */
 .current-icon {
   animation: iconPulse 1.5s ease-in-out infinite !important;
   transform-origin: center center;
@@ -84,20 +133,18 @@ body.night-mode .clock-number {
 /* Pulse inward toward the clock center */
 @keyframes iconPulse {
   0% {
-    transform: translate(0, 0) scale(1);
+    transform: scale(1);
     opacity: 1;
   }
   50% {
-    /* move slightly toward center (negative Y in SVG is up; adjust if needed) */
-    transform: translate(0, -5px) scale(1.15);
-    opacity: 0.85;
+    transform: scale(1.1);
+    opacity: 0.9;
   }
   100% {
-    transform: translate(0, 0) scale(1);
+    transform: scale(1);
     opacity: 1;
   }
 }
-
 
 /* Transition warning pulse effect */
 body.transition-warning .clock-container {
@@ -174,6 +221,8 @@ svg text {
     font-size: 4vmin;
   }
 }
+
+
 
 
 
