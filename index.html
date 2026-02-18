@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NextUp Routine Clock</title>
-  <link rel="stylesheet" href="styles.css"><!-- keep your existing CSS filename -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <!-- Intro / description -->
@@ -75,15 +75,18 @@
 
   <!-- Edit button behavior: go to setup page -->
   <script>
-    const editBtn = document.getElementById("edit-schedule");
-    if (editBtn) {
-      editBtn.addEventListener("click", () => {
-        window.location.href = "setup.html"; // make sure your parent page is named setup.html
-      });
-    }
+    document.addEventListener("DOMContentLoaded", () => {
+      const editBtn = document.getElementById("edit-schedule");
+      if (editBtn) {
+        editBtn.addEventListener("click", () => {
+          window.location.href = "./setup.html"; // make sure the file is named setup.html
+        });
+      }
+    });
   </script>
 </body>
 </html>
+
 
 
 
