@@ -67,11 +67,23 @@ body {
 /* Bigger on phones - fills most of screen */
 @media (max-width: 600px) {
   .clock-container {
-    width: 90vw;
-    max-width: 90vw;
-    max-height: 90vw;
-    margin-top: 0.5rem;
+    width: 98vw;
+    max-width: 98vw;
+    max-height: 98vw;
+    margin-top: 0.25rem;
   }
+  .landing-header {
+    margin-bottom: 0.25rem;  /* tighter spacing */
+  }
+  
+  .landing-header h1 {
+    font-size: 1.3rem;  /* slightly smaller title to save vertical space */
+  }
+  
+  .landing-header p {
+    font-size: 0.85rem;  /* smaller description text */
+  }
+  
 }
 
 /* 4. Make the SVG fill that container perfectly */
@@ -221,6 +233,7 @@ svg text {
     font-size: 4vmin;
   }
 }
+
 
 
 
