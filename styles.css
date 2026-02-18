@@ -52,10 +52,12 @@ body {
 
 /* 3. The Clock Container */
 .clock-container {
-  max-width: 500px;      /* overall size limit on larger screens */
-  max-height: 500px;
+  width: 90vw;           /* 90% of viewport width */
+  max-width: 700px;      /* but cap at 700px on very large screens */
+  max-height: 700px;
   margin: 1rem auto 0;   /* center on page, below header */
   position: relative;
+  aspect-ratio: 1/1;     /* keep it square */
 }
 
 #clock-svg {
@@ -233,6 +235,7 @@ svg text {
     font-size: 4vmin;
   }
 }
+
 
 
 
