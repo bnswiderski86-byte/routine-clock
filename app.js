@@ -97,6 +97,7 @@ function createSector(startAngle, endAngle, color, isCurrent) {
   return path;
 }
 
+// Only the current activity icon is a bit closer to the center
 function createIcon(startAngle, endAngle, iconChar, isCurrent) {
   if (!iconChar) return null;
 
@@ -105,7 +106,9 @@ function createIcon(startAngle, endAngle, iconChar, isCurrent) {
   let midAngle = startAngle + diff / 2;
   const midRad = ((midAngle - 90) * Math.PI) / 180;
 
-  const r = 83; // closer to edge
+  const baseR = 78;         // normal icons
+  const r = isCurrent ? 70  : baseR;  // pull current one inward
+
   const cx = 100;
   const cy = 100;
 
@@ -324,6 +327,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+
 
 
 
