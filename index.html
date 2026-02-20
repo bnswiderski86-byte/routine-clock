@@ -83,6 +83,26 @@
     >
       Edit schedule
     </button>
+
+        <!-- Feedback button -->
+    <button
+      id="feedback-button"
+      type="button"
+      style="
+        margin-top: 0.75rem;
+        padding: 0.5rem 1.3rem;
+        font-size: 0.95rem;
+        border-radius: 8px;
+        border: 1px solid #4b5563;
+        cursor: pointer;
+        background: #f3f4f6;
+        color: #111827;
+        font-weight: 500;
+        display: block;
+      "
+    >
+      Share feedback
+    </button>
   </div>
 
   <!-- Clock logic -->
@@ -97,10 +117,20 @@
           window.location.href = "./setup.html";
         });
       }
+
+      // Feedback button behavior
+      const feedbackBtn = document.getElementById("feedback-button");
+      if (feedbackBtn) {
+        feedbackBtn.addEventListener("click", () => {
+          window.open("https://docs.google.com/forms/d/e/1FAIpQLSdBZ_mIHng_bV12cy0BpQKiRwdXhWgwqj-NNfIWHjNPHFuXQA/viewform?usp=publish-editor", "_blank");
+        });
+      }
     });
   </script>
+
 </body>
 </html>
+
 
 
 
